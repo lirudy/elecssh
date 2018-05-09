@@ -1,5 +1,6 @@
-var os = require('os')
-var conf = require(os.homedir+"/elecssh.json")
+var os = require('os');
+var conf = require(os.homedir+"/elecssh.json");
+
 
 
 var nodes = conf["node-list"];
@@ -34,14 +35,9 @@ conn.on('ready', function() {
     }).stderr.on('data', function(data) {
       term.write(String(data));
     });
-
-    term.textarea.onkeydown = function (e) {
-        if (e.key != 'Enter'){
-          stream.write(e.key);
-        }else{
-          stream.write('\n');
-        }
-      }  
+    term.on('data', function (data) {
+      stream.write( data);
+    })
   });
   
 }).connect(node);
