@@ -9,7 +9,7 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "electron": "^2.0.0",
+    "electron": "^1.8.6",
     "ssh2": "^0.6.0",
     "xterm": "^3.3.0"
   }

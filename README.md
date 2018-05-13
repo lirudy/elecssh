@@ -23,3 +23,4 @@ $HOME/elecssh.json
     }
 }
 ```
+## at windows, please use electron v1.7.12, DO NOT use latest version.
