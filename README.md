@@ -13,7 +13,7 @@
 $HOME/elecssh.json
 ```javascript
 {
-    "node-list":{
+    "remote-list":{
         "node1":{
             "host": "192.168.0.1",
             "port": "22",

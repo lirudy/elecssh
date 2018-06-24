@@ -9,8 +9,9 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "electron": "^1.8.6",
-    "ssh2": "^0.6.0",
-    "xterm": "^3.3.0"
+    "electron": "^1.8.7",
+    "electron-photon": "^1.1.6",
+    "ssh2": "^0.6.1",
+    "xterm": "^3.4.1"
   }
 }

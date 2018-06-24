@@ -16,13 +16,13 @@
     <!--Top header bar here-->
     <tool-bar type="header">
       <h1 class="title">Elecssh</h1>
-      <div class="toolbar-actions">
+      <!--div class="toolbar-actions">
         <btn-group type="absolute">
           <button class="btn btn-segment active">Segment A</button>
           <button class="btn btn-segment"><span class="icon icon-shuffle"></span>Segment B</button>
           <button class="btn btn-segment">Segment C</button>
         </btn-group>
-      </div>
+      </div-->
     </tool-bar>
     <!--Window content here-->
 
@@ -31,32 +31,13 @@
         <div class="window-content">
           <div class="pane-group">
             <div class="pane-sm sidebar">
-              <nav-item class="active">
-                <div class="icon">
-                  <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 24 24" version="1.1" width="100%" height="100%"><path style="fill: #676767;" d="M 20 20 L 20 12 L 22 12 L 12 3 L 2 12 L 4 12 L 4 20 C 4 20.601563 4.398438 21 5 21 L 10 21 L 10 14 L 14 14 L 14 21 L 19 21 C 19.601563 21 20 20.601563 20 20 Z "></path></svg>
-                </div>
-                connors
-              </nav-item>
-              <nav-item>
-                <div class="icon">
-                  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 30 30" width="100%" height="100%"><path style="fill: #676767;" d="M25.983,13.342C25.988,13.228,26,13.116,26,13c0-4.418-3.582-8-8-8c-3.11,0-5.8,1.779-7.123,4.371 C10.296,9.136,9.665,9,9,9c-2.53,0-4.599,1.885-4.932,4.324C1.703,14.129,0,16.363,0,19c0,3.314,2.686,6,6,6h18 c3.314,0,6-2.686,6-6C30,16.382,28.321,14.162,25.983,13.342z M18.707,18.707l-3,3C15.512,21.902,15.256,22,15,22 s-0.512-0.098-0.707-0.293l-3-3c-0.391-0.391-0.391-1.023,0-1.414s1.023-0.391,1.414,0L14,18.586V13c0-0.552,0.447-1,1-1 s1,0.448,1,1v5.586l1.293-1.293c0.391-0.391,1.023-0.391,1.414,0S19.098,18.316,18.707,18.707z"></path></svg>
-                </div>
-                Downloads
-              </nav-item>
+              <nav-group id="addr_bar">
+              </nav-group>
             </div>
             <div class="pane">
               <tab-group id="term-group">
                 <tab-item id="t1">
                   <button action="close"></button>t1
-                </tab-item>
-                <tab-item id="t2">
-                  <button action="close"></button>t2
-                </tab-item>
-                <tab-item id="t3">
-                  <button action="close"></button>t3
-                </tab-item>
-                <tab-item id="t4">
-                  <button action="close"></button>t4
                 </tab-item>
               </tab-group>
 
