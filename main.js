@@ -39,16 +39,13 @@ GlobalVar.ValueList = new function(){
   self.delName = function (nodeName){
     return currentNode[nodeName] = null;
   }
-
-
+  
   for (var remoteNode_id in rmNodes) {
     console.log(rmNodes[remoteNode_id]);
     remoteNode = rmNodes[remoteNode_id];
     self.addNewNode(remoteNode_id);
     
   };
-
-  
 }
 
 var ep = require('electron-photon');
@@ -65,7 +62,13 @@ NameSpace.ConsoleBuilder = new function() {
   
   self.conn = function(_name,_nodeInfo) {
     var term = new xterm.Terminal();
-    term.open(document.getElementById('terminal'));
+
+    var term_box = document.createElement('div');
+    term_box.id = _name+"_term_box";
+
+    document.getElementById("term-panel").appendChild(term_box);
+
+    term.open(term_box);
     term.write('Hello from \x1B[1;3;31melecssh\x1B[0m $ ');
     var Client = require('ssh2').Client;
     var conn = new Client();
@@ -73,24 +76,51 @@ NameSpace.ConsoleBuilder = new function() {
     
     var tab_grp = document.getElementById("term-group");
 
-    var tab = document.createElement("tab-item");
-
-    var tab_close = document.createElement("button");
-    tab_close.setAttribute("action", "close");
+    var tab = document.createElement("div");
+    tab.setAttribute("class", "tab-item");
+    var tab_close = document.createElement("div");
+    tab_close.setAttribute("class", "icon icon-cancel icon-close-tab");
     tab.appendChild(tab_close);
 
     tab.id = _name;
     tab_close.addEventListener("click", function (){
-      console.log("click tab bt :" + event.srcElement.id);
+      console.log("click tab close:" + event.srcElement.id);
+      var pop_win = document.createElement("div");
+      pop_win.setAttribute("class", "panel");
+
+      pop_win.textContent = "close this term ?";
+
+      //pop_win.style
+
+      var pop_ok = document.createElement("button");
+      var pop_cancel = document.createElement("button");
+
+      pop_ok.setAttribute("class", "btn btn-negative");
+      pop_ok.textContent= "ok";
+      
+      pop_cancel.setAttribute("class", "btn btn-positive");
+      pop_cancel.textContent = "cancel";
+
+      pop_win.appendChild(pop_ok);
+      pop_win.appendChild(pop_cancel);
+
+
+      showWin = document.getElementById("term-panel");
+      pop_ok.addEventListener("click", function (){
+      console.log("click pop_ok :" + event.srcElement.id);
+      tab_grp.removeChild(tab);
+      showWin.removeChild(pop_win);
+      });
+
+     
+      showWin.appendChild(pop_win);
+
     });
+
     //tab.addEventListener()
-    tab.addEventListener("focus", function (){
-      console.log("click tab :" + event.srcElement.id);
-    });
-    //tab.addEventListener()
-    //tab.addEventListener("destory", function (){
+    // tab.addEventListener("destory", function (){
     //  console.log("click tab :" + event.srcElement.id);
-    //});
+    // });
 
     var tab_name = document.createElement("div");
     tab_name.textContent = _name;
@@ -109,6 +139,9 @@ NameSpace.ConsoleBuilder = new function() {
           //remove node
           GlobalVar.ValueList.delName(_name);
 
+          //remove tab
+          //tab_grp.removeChild(tab);
+          
           //close xterm window
           term.destroy();
 

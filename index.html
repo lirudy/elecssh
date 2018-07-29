@@ -27,20 +27,16 @@
     <!--Window content here-->
 
     <window-content>
-      <div class="window">
+      <div class="window" id="mainWin">
         <div class="window-content">
           <div class="pane-group">
             <div class="pane-sm sidebar">
               <nav-group id="addr_bar">
               </nav-group>
             </div>
-            <div class="pane">
-              <tab-group id="term-group">
-                <tab-item id="t1">
-                  <button action="close"></button>t1
-                </tab-item>
-              </tab-group>
-
+            <div class="pane" id="term-panel">
+              <div class="tab-group" id="term-group">
+              </div>
               <div id="terminal"></div>
 
             </div>
