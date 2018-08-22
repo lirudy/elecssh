@@ -6,6 +6,21 @@
   <link rel="stylesheet" href="node_modules/xterm/dist/xterm.css" />
 
   <title>elecssh</title>
+
+
+  <style type="text/css">  
+  #pop_win{  
+    position:absolute;
+    width:150px;  
+    height:100px;  
+    margin:20% 40%;  
+    background:grey;  
+    padding:15px;
+    z-index: 999;
+  };
+
+  </style>
+
 </head>
 
 <body>
@@ -27,17 +42,22 @@
     <!--Window content here-->
 
     <window-content>
+      
       <div class="window" id="mainWin">
         <div class="window-content">
+           
           <div class="pane-group">
+              
             <div class="pane-sm sidebar">
               <nav-group id="addr_bar">
               </nav-group>
             </div>
+            
             <div class="pane" id="term-panel">
+              
               <div class="tab-group" id="term-group">
               </div>
-              <div id="terminal"></div>
+              <div id="msgBox" class="pop_win"></div>
 
             </div>
           </div>

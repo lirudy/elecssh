@@ -65,6 +65,7 @@ NameSpace.ConsoleBuilder = new function() {
 
     var term_box = document.createElement('div');
     term_box.id = _name+"_term_box";
+    term_box.setAttribute("class", "pop_win");
 
     document.getElementById("term-panel").appendChild(term_box);
 
@@ -82,6 +83,15 @@ NameSpace.ConsoleBuilder = new function() {
     tab_close.setAttribute("class", "icon icon-cancel icon-close-tab");
     tab.appendChild(tab_close);
 
+    tab.addEventListener("destory", function (){
+     console.log("click tab :" + event.srcElement.id);
+     conn.end();
+     GlobalVar.ValueList.delName(_name);
+     term.destroy();
+    });
+
+
+
     tab.id = _name;
     tab_close.addEventListener("click", function (){
       console.log("click tab close:" + event.srcElement.id);
@@ -90,7 +100,9 @@ NameSpace.ConsoleBuilder = new function() {
 
       pop_win.textContent = "close this term ?";
 
-      //pop_win.style
+      pop_win.className = "pop_win"
+
+      pop_win.id = "pop_win";
 
       var pop_ok = document.createElement("button");
       var pop_cancel = document.createElement("button");
@@ -101,26 +113,34 @@ NameSpace.ConsoleBuilder = new function() {
       pop_cancel.setAttribute("class", "btn btn-positive");
       pop_cancel.textContent = "cancel";
 
-      pop_win.appendChild(pop_ok);
       pop_win.appendChild(pop_cancel);
+      pop_win.appendChild(pop_ok);
 
 
-      showWin = document.getElementById("term-panel");
+      showWin = document.getElementById("msgBox");
+
       pop_ok.addEventListener("click", function (){
-      console.log("click pop_ok :" + event.srcElement.id);
-      tab_grp.removeChild(tab);
-      showWin.removeChild(pop_win);
+        console.log("click pop_ok :" + event.srcElement.id);
+
+        var destory_event = document.createEvent("HTMLevents");
+        destory_event.initEvent("destory", false, false);
+        tab.dispatchEvent(destory_event);
+
+
+        tab_grp.removeChild(tab);
+        showWin.removeChild(pop_win);
       });
 
      
+      pop_cancel.addEventListener("click", function (){
+        console.log("click pop_cancel :" + event.srcElement.id);
+        showWin.removeChild(pop_win);
+      });
+
       showWin.appendChild(pop_win);
 
     });
 
-    //tab.addEventListener()
-    // tab.addEventListener("destory", function (){
-    //  console.log("click tab :" + event.srcElement.id);
-    // });
 
     var tab_name = document.createElement("div");
     tab_name.textContent = _name;
@@ -155,7 +175,7 @@ NameSpace.ConsoleBuilder = new function() {
         })
       });
     
-    }).connect(_nodeInfo);
+    })//.connect(_nodeInfo);
   };
 };
 
