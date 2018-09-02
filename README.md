@@ -1,11 +1,11 @@
 # A SSH Terminal, Based Electron, xterm.js and ssh2(nodejs).
 
 ## TODO List:
-  - node list box
-  - node info config file in HOME path
+  - <s>node list box</s>
+  - <s>node info config file in HOME path</s>
   - scp file send and get
   - node config security
-  - muli-window
+  - <s>muli-window</s>
   - fast command box
   - package binary file
   
