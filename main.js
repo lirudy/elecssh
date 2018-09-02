@@ -1,18 +1,31 @@
 
 
 var GlobalVar = window.GlobalVar || {};
-GlobalVar.ValueList = new function(){
+GlobalVar.ValueList = new function () {
   var self = this;
-  
+
   var os = require('os');
   var nodeConf = require(os.homedir + "/elecssh.json");
-  var rmNodes =  nodeConf["remote-list"];
+  var rmNodes = nodeConf["remote-list"];
+
+  var currentTerm = "";
 
   //all opened remote node
   var currentNode = {};
 
-  
-  self.addNewNode = function(nodeName) {
+
+  self.switchTerm = function (nextTerm) {
+    console.log("nextTerm: " + nextTerm + ",  currentTerm: " + currentTerm);
+
+
+    if (currentTerm != "" && document.getElementById(currentTerm)) {
+      document.getElementById(currentTerm).style.display = "none";
+    }
+    document.getElementById(nextTerm).style.display = "";
+    currentTerm = nextTerm;
+  };
+
+  self.addNewNode = function (nodeName) {
     var addr_bar = document.getElementById("addr_bar");
     var new_addr = document.createElement("nav-item");
     new_addr.textContent = nodeName;
@@ -21,30 +34,30 @@ GlobalVar.ValueList = new function(){
 
 
   //get node link info
-  self.getNode = function(nodeName){
+  self.getNode = function (nodeName) {
     return rmNodes[nodeName];
   }
 
   //add new node to node list
-  self.setName = function(nodeName){
+  self.setName = function (nodeName) {
     return currentNode[nodeName] = "";
   }
 
   //check node existed
-  self.getName = function (nodeName){
+  self.getName = function (nodeName) {
     return currentNode[nodeName];
   }
 
   //remove node form existed
-  self.delName = function (nodeName){
+  self.delName = function (nodeName) {
     return currentNode[nodeName] = null;
   }
-  
+
   for (var remoteNode_id in rmNodes) {
     console.log(rmNodes[remoteNode_id]);
     remoteNode = rmNodes[remoteNode_id];
     self.addNewNode(remoteNode_id);
-    
+
   };
 }
 
@@ -56,15 +69,15 @@ var ssh = require('ssh2');
 
 
 var NameSpace = window.NameSpace || {};
-NameSpace.ConsoleBuilder = new function() {
-  
+NameSpace.ConsoleBuilder = new function () {
+
   var self = this;
-  
-  self.conn = function(_name,_nodeInfo) {
+
+  self.conn = function (_name, _nodeInfo) {
     var term = new xterm.Terminal();
 
     var term_box = document.createElement('div');
-    term_box.id = _name+"_term_box";
+    term_box.id = _name + "_term_box";
     term_box.setAttribute("class", "pop_win");
 
     document.getElementById("term-panel").appendChild(term_box);
@@ -73,8 +86,8 @@ NameSpace.ConsoleBuilder = new function() {
     term.write('Hello from \x1B[1;3;31melecssh\x1B[0m $ ');
     var Client = require('ssh2').Client;
     var conn = new Client();
-    
-    
+
+
     var tab_grp = document.getElementById("term-group");
 
     var tab = document.createElement("div");
@@ -83,17 +96,37 @@ NameSpace.ConsoleBuilder = new function() {
     tab_close.setAttribute("class", "icon icon-cancel icon-close-tab");
     tab.appendChild(tab_close);
 
-    tab.addEventListener("destory", function (){
-     console.log("click tab :" + event.srcElement.id);
-     conn.end();
-     GlobalVar.ValueList.delName(_name);
-     term.destroy();
+    tab.addEventListener("destoryTerm", function () {
+      console.log("destory tab :" + event.srcElement.id);
+      conn.end();
+      GlobalVar.ValueList.delName(_name);
+      term.destroy();
+      term_box = document.getElementById(_name + "_term_box");
+      if (term_box) {
+        document.getElementById("term-panel").removeChild(term_box);
+      }
+
+      showWin = document.getElementById("msgBox");
+      pop_win = document.getElementById("pop_win");
+      if (showWin && pop_win) {
+        showWin.removeChild(pop_win);
+      }
+
+      tab_grp.removeChild(tab);
+
     });
 
 
+    tab.addEventListener("click", function () {
+      console.log("click tab :" + event.srcElement.id);
+
+      GlobalVar.ValueList.switchTerm(_name + "_term_box");
+
+    });
+
 
     tab.id = _name;
-    tab_close.addEventListener("click", function (){
+    tab_close.addEventListener("click", function () {
       console.log("click tab close:" + event.srcElement.id);
       var pop_win = document.createElement("div");
       pop_win.setAttribute("class", "panel");
@@ -108,8 +141,8 @@ NameSpace.ConsoleBuilder = new function() {
       var pop_cancel = document.createElement("button");
 
       pop_ok.setAttribute("class", "btn btn-negative");
-      pop_ok.textContent= "ok";
-      
+      pop_ok.textContent = "ok";
+
       pop_cancel.setAttribute("class", "btn btn-positive");
       pop_cancel.textContent = "cancel";
 
@@ -119,20 +152,17 @@ NameSpace.ConsoleBuilder = new function() {
 
       showWin = document.getElementById("msgBox");
 
-      pop_ok.addEventListener("click", function (){
+      pop_ok.addEventListener("click", function () {
         console.log("click pop_ok :" + event.srcElement.id);
 
         var destory_event = document.createEvent("HTMLevents");
-        destory_event.initEvent("destory", false, false);
+        destory_event.initEvent("destoryTerm", false, false);
         tab.dispatchEvent(destory_event);
 
-
-        tab_grp.removeChild(tab);
-        showWin.removeChild(pop_win);
       });
 
-     
-      pop_cancel.addEventListener("click", function (){
+
+      pop_cancel.addEventListener("click", function () {
         console.log("click pop_cancel :" + event.srcElement.id);
         showWin.removeChild(pop_win);
       });
@@ -154,16 +184,10 @@ NameSpace.ConsoleBuilder = new function() {
         if (err) throw err;
         stream.on('close', function () {
           console.log('Stream :: close');
-          conn.end();
-          
-          //remove node
-          GlobalVar.ValueList.delName(_name);
 
-          //remove tab
-          //tab_grp.removeChild(tab);
-          
-          //close xterm window
-          term.destroy();
+          var destory_event = document.createEvent("HTMLevents");
+          destory_event.initEvent("destoryTerm", false, false);
+          tab.dispatchEvent(destory_event);
 
         }).on('data', function (data) {
           term.write(String(data));
@@ -174,8 +198,8 @@ NameSpace.ConsoleBuilder = new function() {
           stream.write(data);
         })
       });
-    
-    })//.connect(_nodeInfo);
+
+    }).connect(_nodeInfo);
   };
 };
 
@@ -185,15 +209,17 @@ document.getElementById("addr_bar").addEventListener("dblclick", function (event
 
   var nodeName = event.srcElement.textContent;
 
-  if(GlobalVar.ValueList.getName(nodeName) == null){
+  if (GlobalVar.ValueList.getName(nodeName) == null) {
     //open new node link
     GlobalVar.ValueList.currentNode = nodeName;
     console.log(GlobalVar.ValueList.getNode(nodeName));
-    
-    NameSpace.ConsoleBuilder.conn(nodeName, GlobalVar.ValueList.getNode(nodeName));
-    GlobalVar.ValueList.setName(nodeName)
 
-  }else{
+    NameSpace.ConsoleBuilder.conn(nodeName, GlobalVar.ValueList.getNode(nodeName));
+    GlobalVar.ValueList.setName(nodeName);
+
+    GlobalVar.ValueList.switchTerm(nodeName + "_term_box");
+
+  } else {
     //existed node, do nothing.
     console.log("current node is " + GlobalVar.ValueList.getNode(nodeName));
   }
